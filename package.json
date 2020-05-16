@@ -1,0 +1,24 @@
+{
+  "name": "convep-arquivo",
+  "version": "1.0.0",
+  "description": "O arquivo do Congresso Vertentes da Psicologia.",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp"
+  },
+  "author": "Daniel Sarsi Orta <danielsarsi@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "css-declaration-sorter": "^5.1.2",
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-posthtml": "^3.0.4",
+    "gulp-sass": "^4.1.0",
+    "htmlnano": "^0.2.5",
+    "node-sass": "^4.14.1",
+    "postcss-uncss": "^0.17.0"
+  }
+}
