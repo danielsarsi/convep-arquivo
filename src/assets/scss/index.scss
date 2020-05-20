@@ -128,10 +128,12 @@ main {
       margin: 0;
       margin-top: 2rem;
       text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
 
       li {
         margin: 0.5rem;
-        display: inline-block;
       }
     }
   }
@@ -277,10 +279,10 @@ footer {
 
       ul {
         margin-top: 1rem;
+        display: block;
 
         li {
           margin: 0;
-          display: block;
           margin-bottom: 0.75rem;
           &:last-child {
             margin-bottom: 0;
