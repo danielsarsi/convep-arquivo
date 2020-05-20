@@ -57,8 +57,7 @@ exports.watch = function () {
   exports.default();
 
   watch("src/assets/*.html", html);
+  watch("src/assets/scss/*.scss", scss);
   watch("src/assets/img/**/*.*", img);
   watch("src/assets/fontes/*.*", fontes);
-  watch("src/assets/css/*.css", css);
-  watch("src/assets/scss/*.scss", scss);
 };
