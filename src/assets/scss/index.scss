@@ -369,6 +369,20 @@ footer {
     }
   }
 
+  &#quarta {
+    color: #323232;
+    background-color: #bababa;
+    .tempo {
+      .linha {
+        background-color: #323232;
+      }
+      .circulo {
+        border-color: #323232;
+        background-color: #bababa;
+      }
+    }
+  }
+
   &#terceira {
     background-color: #063f20;
     .tempo .circulo {
