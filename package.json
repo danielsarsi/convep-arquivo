@@ -2,7 +2,6 @@
   "name": "convep-arquivo",
   "version": "2.0.0",
   "description": "O arquivo do Congresso Vertentes da Psicologia.",
-  "main": "index.js",
   "scripts": {
     "postcss": "postcss src/css/*.css -d dist/assets/css/",
     "dev": "serve src/"
