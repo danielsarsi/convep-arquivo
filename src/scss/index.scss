@@ -8,8 +8,8 @@ $simbolo-tamanho: 100px;
 
 $desktop-container-tamanho: 20rem;
 $desktop-margem-cima-constante: 40vh;
-$desktop-introducao-margem-diferenca: ($simbolo-tamanho / 2) -
-  ($linha-tamanho / 2);
+$desktop-introducao-margem-diferenca: ($simbolo-tamanho * 0.5) -
+  ($linha-tamanho * 0.5);
 $desktop-introducao-margem: calc(
   #{$desktop-margem-cima-constante} - #{$desktop-introducao-margem-diferenca}
 );
@@ -95,7 +95,7 @@ main {
       font-size: 1.25em;
       font-weight: bold;
       position: relative;
-      bottom: ($circulo-tamanho / 2) + 1px;
+      bottom: ($circulo-tamanho * 0.5) + 1px;
 
       display: flex;
       flex-direction: column;
@@ -241,7 +241,7 @@ footer {
 
   .edicao {
     $mobile-margem-circulo-posicao: calc(
-      #{$mobile-margem-esquerda / 2} - #{($circulo-tamanho / 2) + 2px}
+      #{$mobile-margem-esquerda * 0.5} - #{($circulo-tamanho * 0.5) + 2px}
     );
 
     grid-template-areas: "tempo conteudo";
