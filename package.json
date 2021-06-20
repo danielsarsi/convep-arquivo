@@ -4,18 +4,15 @@
   "description": "O arquivo do Congresso Vertentes da Psicologia.",
   "main": "index.js",
   "scripts": {
-    "scss": "sass src/scss:dist/assets/css --no-source-map",
-    "postcss": "postcss dist/assets/css/*.css -d dist/assets/css/"
+    "postcss": "postcss src/css/*.css -d dist/assets/css/"
   },
   "author": "Daniel Sarsi Orta <daniel@sarsi.cc>",
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "autoprefixer": "^10.2.5",
-    "cssnano": "^5.0.1",
-    "postcss-cli": "^8.3.1",
-    "posthtml-cli": "^0.9.1",
-    "sass": "^1.32.11"
+    "autoprefixer": "^10.2.6",
+    "cssnano": "^5.0.6",
+    "postcss-cli": "^8.3.1"
   },
   "dependencies": {
     "normalize": "^0.3.1"
