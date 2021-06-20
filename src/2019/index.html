@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Site oficial do 3º Congresso Vertentes da Psicologia (CONVEP 2019), com o tema &quot;Psicologia e Democracia: Construção na Resistência&quot. 29 de outubro a 2 de novembro de 2019.">
+  <link rel="preconnect" href="https://khms1.googleapis.com">
+  <link rel="preconnect" href="https://maps.gstatic.com">
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="128x128" href="favicon.png">
+  <link rel="stylesheet" href="https://use.typekit.net/svd6oee.css">
+  <link rel="stylesheet" href="css/chunk-vendors.81e18a23.css">
+  <link rel="stylesheet" href="css/app.b2da6b0d.css">
+  <title>CONVEP 2019</title>
+  <script>
+    const randomArrayItem = (array) => array[Math.floor(Math.random() * array.length)]
+
+    const shuffle = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]
+      }
+    }
+
+    const PROPORCAO_HEIGHT = 410
+    const PROPORCAO_WIDTH = 388
+
+    const PALAVRAS = ['fábrica de chocolates', 'casa 52', 'peixes', 'ultranacionalismo', 'neofascismo', 'fake news', 'nova política', 'milícias', 'balbúrdia', 'neoliberalismo', 'integralismo', 'olavo', 'laranjas', 'agrotóxico', 'armas', 'cansaço', 'militarismo', 'saudades', 'melancolia', 'ressentimento', 'reconhecimento', '80 tiros', 'depressão', 'burnout', 'bots', 'cura gay', 'hipocrisia', 'coach quântico', 'nepotismo', 'vaza jato', 'terra plana', 'homofobia', 'xenofobia', 'patriarcado', 'ditadura', 'incels', 'ancap', 'nióbio', 'feminicídios', 'globalismo', 'astronauta', 'ator pornô', 'grafeno', 'abacates', 'golden shower', 'autoverdade', 'claustrofobia', 'censura', 'confusão', 'antivacina', 'future-se', 'distopia', 'Queiroz', 'contingenciamento', '3,5 chocolates', 'minion']
+
+    // cocô dia sim dia não
+    if (new Date().getDate() % 2 !== 0) { PALAVRAS.push('cocô') }
+
+    let PONTOS = [
+      { x: 205, y: 365, posicao: 'esquerda', tamanho: 3 },
+      { x: 222, y: 377, posicao: 'baixo', tamanho: 2 },
+      { x: 61, y: 108, posicao: 'esquerda', tamanho: 4 },
+      { x: 113, y: 60, posicao: 'cima', tamanho: 4.5 },
+      { x: 193, y: 49, posicao: 'cima', tamanho: 2.5 },
+      { x: 334, y: 166, posicao: 'direita', tamanho: 4 },
+      { x: 360, y: 115, posicao: 'direita', tamanho: 3 },
+      { x: 315, y: 98, posicao: 'cima', tamanho: 3 },
+      { x: 167, y: 264, posicao: 'esquerda', tamanho: 4 },
+      { x: 356, y: 260, posicao: 'direita', tamanho: 3.5 },
+      { x: 324, y: 290, posicao: 'baixo', tamanho: 3 },
+      { x: 126, y: 219, posicao: 'esquerda', tamanho: 4 },
+      { x: 156, y: 298, posicao: 'esquerda', tamanho: 2 }
+    ]
+
+    const PONTOS_USADOS = []
+
+    const PONTOS_QUANTIDADE = PONTOS.length
+
+    const EVENTOS = new Set()
+
+    shuffle(PALAVRAS)
+
+    const adicionarAnalisador = () => {
+      const coordenada = randomArrayItem(PONTOS)
+
+      const indicador = document.createElement('div')
+      const ponto = document.createElement('div')
+      const reta = document.createElement('div')
+      const descricao = document.createElement('div')
+
+      indicador.className = `indicador ${coordenada.posicao}`
+      ponto.className = 'ponto'
+      reta.className = 'reta'
+      descricao.className = 'descricao'
+
+      indicador.appendChild(ponto)
+      indicador.appendChild(reta)
+      indicador.appendChild(descricao)
+
+      document.querySelector('#mapa').appendChild(indicador)
+
+      PONTOS.splice(PONTOS.indexOf(coordenada), 1)
+      PONTOS_USADOS.push(coordenada)
+
+      // palavra
+      const palavra = PALAVRAS.pop()
+      descricao.textContent = palavra
+
+      // posicionamento
+      const posicionamento = () => {
+        const mapa = document.querySelector('#brasil').getBoundingClientRect()
+
+        let dimensao, tamanho
+
+        if (['cima', 'baixo'].includes(coordenada.posicao)) {
+          dimensao = 'height'
+          tamanho = (coordenada.tamanho * mapa.height) / PROPORCAO_HEIGHT
+        }
+
+        if (['esquerda', 'direita'].includes(coordenada.posicao)) {
+          dimensao = 'width'
+          tamanho = (coordenada.tamanho * mapa.width) / PROPORCAO_WIDTH
+        }
+
+        reta.style[dimensao] = `${tamanho}rem`
+
+        const coordenadaX = (coordenada.x * mapa.width) / PROPORCAO_WIDTH
+        const coordenadaY = (coordenada.y * mapa.height) / PROPORCAO_HEIGHT
+
+        indicador.style.top = `${coordenadaY}px`
+        indicador.style.left = `${coordenadaX}px`
+
+        const pontoCoord = ponto.getBoundingClientRect()
+
+        const y = (coordenadaY * 2) - pontoCoord.y + mapa.y
+        const x = (coordenadaX * 2) - pontoCoord.x + mapa.x
+
+        indicador.style.top = `${y}px`
+        indicador.style.left = `${x}px`
+      }
+
+      posicionamento()
+
+      window.addEventListener('resize', posicionamento)
+      EVENTOS.add(posicionamento)
+
+      indicador.addEventListener('animationend', (e) => {
+        if (e.animationName === 'esmaecer' && e.target === indicador) {
+          PALAVRAS.unshift(palavra)
+          PONTOS.push(coordenada)
+          PONTOS_USADOS.splice(PONTOS_USADOS.indexOf(coordenada), 1)
+
+          window.removeEventListener('resize', posicionamento)
+          EVENTOS.delete(posicionamento)
+
+          indicador.parentNode.removeChild(indicador)
+        }
+      })
+    }
+
+    setTimeout(() => {
+      setInterval(() => {
+        if (PONTOS.length > (PONTOS_QUANTIDADE - 6)) {
+          adicionarAnalisador()
+        }
+      }, 1400)
+    }, 500)
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but CONVEP 2019 doesn't work properly without JavaScript enabled. Please enable it
+      to continue.</strong>
+  </noscript>
+  <div id="app">
+    <div>
+      <section id="inicio--bem-vindo">
+        <div id="mapa">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 391.32 413.36" id="brasil">
+            <title>Brasil</title>
+            <g>
+              <path id="nordeste"
+                d="M283.65,62.28a107.17,107.17,0,0,1,13.48,4.28c4.45,1.87,5.09,6.45,4.6,10.78-.11,1-.05,2.39.94,2.69a1.67,1.67,0,0,0,.86,0c4.16-1,5.52-5.84,10.71-5.24,3.2.37,5.6,2.67,8.25,4.26,2.47,1.48,4.72,1.8,7.51,2.25a20,20,0,0,0,4.82.34c1.71-.14,3.36-.69,5.07-.78,7.94-.41,14.79,6.82,20,11.83,3.37,3.23,6.73,6.92,11.28,8,4.09,1,11.07-.55,13.5,4a16.18,16.18,0,0,1,1.3,4.79c.85,4.71,3.87,9.5,3.84,14.25a12.73,12.73,0,0,1-1.08,4.51c-4.87,12.48-13,21.14-21.55,31.09-3.88,4.5-6.53,11-12,13.91a17.76,17.76,0,0,0-4.87,4.28,9.57,9.57,0,0,0-2.21,6.48c0,8.31,2.89,16.16,1.28,24.62-.57,3-1.54,8.28-4.26,10.15a4.7,4.7,0,0,0-1.31,1l0-.42a6.75,6.75,0,0,0-3-2.37c-2-1-3.64-7-3.36-9,.22-1.53,1.58-2.59,2.72-3.63,2.39-2.16,2.65-6.13-.8-7.33-1-.36-2.16-.46-3.21-.8-2.24-.72-3.52-2.93-5.56-3.74.61.24-2.25,5.73-2.47,6.19-1.91,3.95-5.06,6.31-9.68,5.5a14,14,0,0,1-8.27-4.87,7.78,7.78,0,0,1-1.82-5.4c.1-1.87,1.85-4,1.62-5.75-.12-.87-1.33-1-1.95-1.38a9,9,0,0,1-2.66-2.22,7.5,7.5,0,0,0-1.72-1.83c-1.93-1.18-4.34.81-5.77,2-2.12,1.71-6.85,5.78-9.91,5l-.45.5c.7-1,.17-3.92.08-5.06a13.65,13.65,0,0,0-.75-3.38,15.6,15.6,0,0,1-.91-5.68c.05-2.15-.17-4.39-1.58-6.11l-.13-.13c2.06-3.33,1.76-8.76,0-12.43a5.19,5.19,0,0,1-.85-3.07c.35-1.74,2.53-2.3,3.81-3.53,2.3-2.19.62-6.87-2.55-7.09C291,142.84,297,137.4,296.92,131s-7.65-12-13.37-9a34.63,34.63,0,0,1-4.83,2.46c-3.59,1.47-6-4-5.91-7.67s1.43-7.43.32-10.93a8.44,8.44,0,0,0-10.42-5.2c7.85-3.35,12.72-11.12,17.11-18.45,3-5.06,6.18-10.7,5.19-16.53a9.09,9.09,0,0,0-1.36-3.36"
+                class="regiao"></path>
+              <path id="norte"
+                d="M121.08,176.72a12.32,12.32,0,0,0,3-4.55c1.19-3.76.73-7.93.11-11.76-.43-2.71-1.31-5.95-4-6.68s-5.25,1.39-7.69.46-2.87-4-3-6.6l-.34-8.16c-.06-1.6-.07-3.37,1-4.56,1.32-1.5,3.64-1.42,5.62-1.24q9.16.8,18.36.68a6.38,6.38,0,0,0,3.33-.67c4.1-2.57.33-11.83,5.14-12.43,2.58,2.07,2.72,5.84,3.69,9,2.38,7.79,11.62,12.72,19.42,10.37-3.47-7.65,3.62-17.79,12-17.15s13.85,11.74,9.25,18.77A242.55,242.55,0,0,0,214.57,144c-.42,4.24-2.13,8.24-3.29,12.35a35.57,35.57,0,0,0-.7,14.76c1,5,5.79,2.9,10.61,3.25,1.14.09,2.57-2.12,3.68-2.39,2.49-.61,4.71,1.51,6.89,2.86,4.64,2.87,10.45.43,15.21-1.32,5.12-1.89,5.38-10,3.06-15-.46-1-1.07-2-.85-3.07.35-1.74,2.52-2.3,3.81-3.53,2.3-2.18.62-6.87-2.55-7.09,6.39-.77,12.33-6.22,12.27-12.65s-7.66-12-13.37-9a32.24,32.24,0,0,1-4.84,2.46c-3.58,1.47-6-4-5.9-7.67s1.43-7.43.32-10.93a8.45,8.45,0,0,0-10.42-5.2c7.84-3.35,12.72-11.12,17.1-18.44,3-5.07,6.18-10.71,5.19-16.53s-8.55-10.47-13-6.57c-1.77,1.56-3.54,4.34-5.68,3.34s-.91-4.56-1.61-7-3.76-3.61-6.4-3.71-5.41.36-7.82-.71-3.91-4.64-1.91-6.35c1.14-1,2.87-.92,4-1.84,2.06-1.61,1.09-5.05-.79-6.85s-4.46-2.89-6-5c-3.93-5.33.68-14-3.63-19a25.05,25.05,0,0,0-10,11c-1.15,2.47-2.06,5.34-4.43,6.68-2,1.11-4.35.85-6.57.56q-9.77-1.23-19.58-2.19c-1.39-.14-3-.17-3.92.92-.65.8-.64,2-1.21,2.84-1.75,2.7-5.8.07-9-.18-4.85-.37-8.17,5.33-13,6.06a9.32,9.32,0,0,1-6.76-2,15,15,0,0,1-5.06-16.56c1.1-3.1,3.27-6.42,1.83-9.38-.54-1.11-1.53-2-2.13-3-.72-1.34-.79-2.93-1.41-4.32S124.56,1,123.21,1.7c-1,.48-1.29,1.65-1.76,2.61-3.49,7.23-16,5-20.18,11.81L89.7,11.62c-1.51-.59-4-.57-3.93,1.05s2.39,1.64,3.41,2.79c1.41,1.6-.36,3.92-1.15,5.91-1.75,4.4,3.4,9.72,7.86,8.11-5.58,3.47-9.82,8.91-15.7,11.85S65.4,43.15,63.47,36.87c-.35-1.16-.48-2.49-1.35-3.33-2.25-2.16-6.77,1-8.85-1.36-1,2.55-4.33,3.22-7.07,3s-5.65-.9-8.11.32-3.29,5.5-.7,6.43c1.38.5,2.88-.26,4.35-.21s2.92,2.05,1.69,2.84c-4.27-.91-8.48,4.21-6.75,8.23.78,1.82,2.41,3.14,3.37,4.87C41.9,61,41,65.14,40,68.84l-4.59,17.6A5.48,5.48,0,0,1,34.31,89c-.94,1-2.44,1.13-3.79,1.28A46.36,46.36,0,0,0,15.7,94.39c-2.41,1.14-4.83,2.6-6.08,5-1.35,2.52-1.09,5.58-1.95,8.31C6.18,112.36,1.4,116,1.5,120.91c.07,3.1,2.09,5.77,4,8.19l9.05,11.35a7.27,7.27,0,0,0,3,2.57c3.78,1.37,6.91-3.72,10.91-4.19.19,3.92-2.45,8.8.68,11.17a6.31,6.31,0,0,0,2.43,1A32.33,32.33,0,0,0,53.7,148c6.8-3.6,13.82-9.89,21-7.27a3.76,3.76,0,0,1,2,1.4c.9,1.43,0,3.25-.54,4.83a13.93,13.93,0,0,0,5.1,15.8c2.4,1.63,5.23,2.44,8,3.39a74.48,74.48,0,0,1,15.51,7.5c2,1.25,3.51,2.49,6,2.38,2.27-.11,5.05-.67,7.12.61.73.46,1.72.93,2.49,1.33Z"
+                class="regiao"></path>
+              <path id="centro-oeste"
+                d="M237,227.35c1.41,1.73,1.63,4,1.58,6.11a15.6,15.6,0,0,0,.91,5.68,13.65,13.65,0,0,1,.75,3.38c.09,1.14.62,4.1-.08,5.06-.89,1.21-3,.32-3.82-.36-.56-.46-1.14-.91-1.74-1.31-2.21-1.46-4,1.1-3.76,3.2.3,2.42,1.68,5.31-1.06,7-2.38,1.5-4.14,4.35-2.6,7.1.29.51.67,1,.95,1.49.86,1.66-.27,3.59-.81,5.16-.8,2.34,4.15,4.66,5.63,5.85,2.24,1.81,3.93,4.22,3.72,7.22a9.89,9.89,0,0,1-2.42,5.57,12.47,12.47,0,0,1-13.35,3.7,9.88,9.88,0,0,1-6.44-7.13c-.38-1.91.44-5.09-1.24-6.46-1.53-1.25-3.26.19-4.63.85-1.9.9-4.13.53-6.12,1.06-4.1,1.1-7.31,5.65-8.72,9.43-1,2.78-1.26,5.76-3.1,8.19a40.25,40.25,0,0,1-3.51,3.76,19.75,19.75,0,0,0-4.06,5.55c-1,2.11-1.42,4.06-3.27,5.65a12.52,12.52,0,0,1-1.92,1.4c-2.05,1.16-4.3,2.06-6.34,3.3a11,11,0,0,0-2.75,2,13,13,0,0,0-1.74,3.08,61.56,61.56,0,0,0-2.31,6.1c-.34-.19-.84-.43-1.31-.73a3.5,3.5,0,0,0-3.09-.27c-.8.26-1.57.65-2.39.83a2.78,2.78,0,0,1-2.4-.45c-1.45-1.27-1.32-4.93-1.68-6.72a20.43,20.43,0,0,0-3-8c-1.3-1.83-2.94-1.9-4.94-1.34-3.1.86-8.3,1.45-11.22-.27a8.37,8.37,0,0,0-1.77-.94c-1.61-.45-1.46-.88-1.35-2.47a52.71,52.71,0,0,0,.05-5.76,17.28,17.28,0,0,0-.24-4c-.41-1.31-1.41-2.41-1.51-3.83a21.81,21.81,0,0,1,1-5.68,32.75,32.75,0,0,1,2.09-6c1.2-2.58,2.25-4.51,1.66-7.45a13.63,13.63,0,0,0-4.6-7.71,6,6,0,0,1-2.12-2.92c-.27-1.14.46-5.36-.69-5.78a27.48,27.48,0,0,0-7.64-1.34c-1.55-.11-6.64.32-7.3-1.28-1.17-2.88-2.55-5.64-3.93-8.42-.73-1.45,1.77-1.55,1.89-2.86a3.67,3.67,0,0,0-.28-1.45,31.38,31.38,0,0,1-2.09-5.62c-.53-1.86-1.36-4,.06-5.64a12.17,12.17,0,0,0,2.95-4.55c1.19-3.76.73-7.93.11-11.76-.43-2.71-1.31-5.95-4-6.68s-5.25,1.39-7.68.46-2.88-4-3-6.6L96,195.65c-.06-1.6-.07-3.37,1-4.56,1.32-1.5,3.64-1.42,5.63-1.24,6.1.53,12.23.76,18.35.68a6.28,6.28,0,0,0,3.33-.67c4.11-2.57.34-11.82,5.14-12.43,2.58,2.07,2.72,5.84,3.69,9,2.38,7.79,11.63,12.72,19.43,10.37-3.48-7.65,3.61-17.79,12-17.15s13.84,11.74,9.24,18.77a242.7,242.7,0,0,0,27.61,1.81c-.42,4.25-2.13,8.24-3.29,12.35a35.74,35.74,0,0,0-.7,14.76c1,5,5.79,2.9,10.61,3.25,1.14.09,2.57-2.12,3.68-2.39,2.5-.61,4.71,1.51,6.89,2.86,4.64,2.87,10.45.43,15.22-1.32a5.92,5.92,0,0,0,3-2.57"
+                class="regiao"></path>
+              <path id="sul"
+                d="M212.88,321.7c.21,2.32.66,4.72.66,7.05.22,2.31-.76,2.68-2,4.42s.83,2.14,2.19,3a6.66,6.66,0,0,1,2.89,3.09,17.65,17.65,0,0,1,1,6.21c.1,1.91-.46,4.2-2.09,5.38a27.15,27.15,0,0,1-3.61,1.83c-1.16.59-2.31,1.19-3.46,1.8-2.08,1.11-4.14,2.26-6.2,3.42a27.39,27.39,0,0,0-6,4,51.66,51.66,0,0,0-4.17,5.3,38.26,38.26,0,0,1-4.68,4.76c-.94.83-2,1.55-2.9,2.4-1.26,1.15-3.4,3-1.67,4.73a5.05,5.05,0,0,0,2.8,1.35c1.63.22,3.31-.35,4.88.3,2.83,1.17,4,4,5.75,6.27a1.82,1.82,0,0,0,.59.55c.69.32,1.47-.19,2.16-.23a4.14,4.14,0,0,1,2.21.63c1,.57,1.78,1.38,2.75,1.95a18.42,18.42,0,0,0,4.38,1.56c4.48,1.34,6.74,5.7,9.94,8.72a4.54,4.54,0,0,1,1.51,2,3,3,0,0,1-.9,2.65c-.69.9-2,2-2,3.22a2.23,2.23,0,0,0,.3,1.08,7.24,7.24,0,0,0,2,2.23c1.84,1.42,3.22,0,4.55-1.42a15.18,15.18,0,0,0,3-4.59c.52-1.21.78-2.47,1.35-3.65a10.83,10.83,0,0,0,1.44-3.94,13.21,13.21,0,0,1,1-3.62l.43-.83c.59-1.62,2.07-2.85,2.32-4.56a6.2,6.2,0,0,1,1.68-3.67,48.32,48.32,0,0,0,3.21-3.79c.45-.62.81-1.29,1.22-1.93.19-.3,1-1.81,1.32-1.86a3.81,3.81,0,0,1,3.44,1.37c1,1.27.15,2.78-.44,4-1.45,3.1-3,6.94-5.9,8.95a14.57,14.57,0,0,1-3.3,1.53c-1.62.6-3.75.73-3.92,2.93,0,.62.17,1.39.87,1.51a2.1,2.1,0,0,0,1-.11,26,26,0,0,0,16.08-14c1.34-3.06,2-6.55,3.9-9.36a11.49,11.49,0,0,1,2.51-2.72,84.41,84.41,0,0,0,7.4-7,8.21,8.21,0,0,1,.85-1,12.88,12.88,0,0,0,1.44-2.28c1.54-3.24.63-6.83-.06-10.15s-1.44-6.87-.48-10.23a10.64,10.64,0,0,1,2-4.09,21.83,21.83,0,0,0,2.08-2.65c.48-.82-.26-.81-.85-1A5.59,5.59,0,0,1,265,331.8a10.77,10.77,0,0,1-1.83-2.31,1.49,1.49,0,0,0-1.37-.82,10.07,10.07,0,0,0-1.34.1c-1.23.11-3.54-.12-4.26-1.34a2.81,2.81,0,0,1-.12-1.73,5.94,5.94,0,0,0-.73-3.43c-.45-.8-1.18-1.27-1.45-2.18a13.59,13.59,0,0,0-.37-2,8,8,0,0,0-1.36,3.87,4.77,4.77,0,0,1-2,3.31,11.31,11.31,0,0,1-6.62,2.13h-.23c-3.66,0-8.12-1.41-10.23-4.6s-2.07-7.12.84-9.75c.67-.6,1.44-1,2.12-1.63s1.48-1.09.57-1.8c-1.27-1-3.52-1-5-1-2,0-4.09.07-5.44-1.61l-.18.1c-2.05,1.16-4.3,2.06-6.34,3.3a11,11,0,0,0-2.75,2,13,13,0,0,0-1.74,3.08A61.56,61.56,0,0,0,212.88,321.7Z"
+                class="regiao"></path>
+              <path id="sudeste"
+                d="M300.68,325.36a5.48,5.48,0,0,0,1.4-.57c6.17-4.91,12-9.15,19.8-11.22a18.72,18.72,0,0,0,6.29-2.5,39.55,39.55,0,0,1,6.24-3.86,24.93,24.93,0,0,1,14.91-1.55,18,18,0,0,0,4.05.67c4.62-.05,1.31-3.45,3.86-5.5,1-.78,2.23-1.11,3.26-1.8,3.46-2.3,1.77-7.47,4.75-10.41,1.05-1,2.45-1.7,3.32-2.88s1.06-2.53,1.76-3.71c1.49-2.5,5.05-3.57,5.76-6.56a7.31,7.31,0,0,0,.12-2,85.45,85.45,0,0,1,.39-10.37,2.85,2.85,0,0,1,.4-1.41l0-.42a6.8,6.8,0,0,0-3-2.37c-2-1-3.64-7-3.36-9,.21-1.53,1.57-2.58,2.72-3.62,2.38-2.17,2.65-6.13-.8-7.34-1-.36-2.16-.46-3.21-.8-2.24-.72-3.52-2.93-5.56-3.74.6.24-2.25,5.73-2.47,6.19-1.91,3.95-5.07,6.32-9.68,5.51a14.05,14.05,0,0,1-8.27-4.88,7.83,7.83,0,0,1-1.83-5.4c.11-1.86,1.86-4,1.63-5.75-.12-.87-1.33-1-2-1.37a9.16,9.16,0,0,1-2.65-2.23,7.5,7.5,0,0,0-1.72-1.83c-1.93-1.18-4.35.81-5.78,2-2.11,1.7-6.84,5.78-9.91,5l-.45.5c-.88,1.21-3,.32-3.81-.36a20.44,20.44,0,0,0-1.75-1.31c-2.21-1.46-4,1.1-3.76,3.2.31,2.43,1.69,5.31-1.05,7-2.39,1.5-4.14,4.36-2.6,7.1.28.51.67,1,.94,1.49.87,1.66-.26,3.59-.8,5.16-.8,2.34,4.15,4.67,5.63,5.85,2.24,1.81,3.93,4.22,3.72,7.22a9.89,9.89,0,0,1-2.42,5.57,12.45,12.45,0,0,1-13.35,3.7,9.88,9.88,0,0,1-6.44-7.12c-.38-1.92.44-5.1-1.24-6.47-1.53-1.25-3.26.19-4.64.85-1.89.9-4.13.54-6.11,1.07-4.1,1.09-7.32,5.64-8.72,9.42-1,2.78-1.26,5.76-3.1,8.19a40.25,40.25,0,0,1-3.51,3.76,20,20,0,0,0-4.07,5.55c-.94,2.11-1.42,4.06-3.26,5.65a12.34,12.34,0,0,1-1.92,1.4l.17-.1c1.36,1.68,3.47,1.64,5.44,1.62,1.52,0,3.77-.05,5,.94.91.71.19,1.14-.57,1.8s-1.46,1-2.12,1.63c-2.91,2.63-3,6.57-.85,9.75s6.58,4.59,10.24,4.6H276a11.32,11.32,0,0,0,6.63-2.13,4.77,4.77,0,0,0,2-3.31,7.91,7.91,0,0,1,1.36-3.87,13.59,13.59,0,0,1,.36,2c.28.91,1,1.38,1.46,2.18a5.94,5.94,0,0,1,.73,3.43,2.81,2.81,0,0,0,.11,1.73c.73,1.22,3,1.45,4.26,1.34a10.22,10.22,0,0,1,1.35-.1,1.51,1.51,0,0,1,1.37.82,10.24,10.24,0,0,0,1.83,2.31A5.53,5.53,0,0,0,299.8,325"
+                class="regiao"></path>
+            </g>
+          </svg>
+        </div>
+        <figure id="simbolo">
+          <img src="img/simbolo.2d9790a6.svg" alt="3º Congresso Vertentes da Psicologia (CONVEP 2019)">
+        </figure>
+        <h1>Psicologia e Democracia: Construção na Resistência</h1>
+        <h2>29 de outubro a 2 de novembro de 2019</h2>
+      </section>
+      <header id="cabecalho--padrao" class="inicio">
+        <input type="checkbox" class="menu">
+        <nav>
+          <a class="fechar"></a>
+          <ol>
+            <li><a href="#sobre-o-evento">Sobre o evento</a></li>
+            <li><a href="#quem-somos">Quem somos</a></li>
+            <li><a href="#onde-fazemos">Onde fazemos</a></li>
+            <li><a href="#o-que-tera">O que terá</a></li>
+            <li><a href="comunicacoes/">Comunicações orais</a></li>
+            <li><a href="informacoes">Informações gerais</a></li>
+          </ol>
+        </nav>
+        <script>
+          const checkbox = document.querySelector('.menu')
+          const botaoFechar = document.querySelector('.fechar')
+          botaoFechar.addEventListener('click', () => {
+            checkbox.checked = false
+          })
+        </script>
+      </header>
+      <main id="inicio--conteudo">
+        <article id="sobre-o-evento" class="secao">
+          <h1>a Psicologia e a democracia</h1>
+          <div class="texto">
+            <p>A Psicologia no Brasil tem sofrido retrocessos em relação a suas políticas públicas. De cortes nas
+              políticas de redução de danos até a reemergência de lógicas antirreformistas, da exclusão de grupos
+              tradicionais e minoritários até propostas de “cura gay” que sempre voltam à tona, buscamos nosso lugar –
+              que vem sendo apropriado indevidamente por outras áreas – em meio a construção de uma Psicologia
+              acolhedora da diversidade nacional, de forma a resistir às constantes ameaças à democracia e aos direitos
+              humanos. Em momentos como esse é necessária uma reflexão da maneira como essa ciência vem sendo construída
+              em âmbito nacional e em como dar visibilidade a práticas que contemplem tais diversidades.</p>
+            <p>No ano de 2019 ocorreu a 16ª Conferência Nacional de Saúde (8a+8) que propiciou debates acerca da saúde
+              pública e da democracia, no contexto em que o SUS encontra-se ameaçado. Em alinhamento com essa
+              perspectiva, a terceira edição do CONVEP, com o tema “Psicologia e Democracia: construção na resistência”,
+              busca dar luz a questões da Psicologia no Brasil e refletir sobre maneiras de abordar os temas na formação
+              e na prática, pensando sobre o que já ocorre e o que pode estar por vir.</p>
+          </div>
+        </article>
+        <figure class="cartaz"><img src="img/cartaz-6.07e4e45e.svg"
+            alt="Cartaz com os dizeres: 'Cure seu ódio'. Há um arco-íris na parte de cima.">
+          <figcaption class="direita">Reprodução de um cartaz do protesto contra a "cura gay". São Paulo, 22 de setembro
+            de 2017.</figcaption>
+        </figure>
+        <article id="quem-somos" class="secao">
+          <h1>Feita por estudantes</h1>
+          <div class="texto">
+            <p>O CONVEP surgiu após os movimentos de ocupação e greve estudantil no final de 2016. Símbolo de luta
+              contra retrocessos políticos, foi fundamental para o sentimento de coletividade e organização de classe
+              pela defesa de princípios básicos, além da descoberta de uma potencialidade positiva transformadora a
+              partir do engajamento político. Tomando posições e sendo agentes de nossa própria realidade, podemos
+              articular como queremos produzir nossa história. Dessa maneira, vemos o congresso como forma de
+              resistência ao discutir sobre o que é constantemente ameaçado, pensando nas decisões que vêm sendo tomadas
+              no campo psicológico, que influenciam tanto na formação quanto na atuação como profissionais da saúde.</p>
+          </div>
+        </article>
+        <figure class="cartaz"><img src="img/cartaz-4.0e392bbf.svg"
+            alt="Cartaz com os dizeres: 'A ciência salva vidas! Não aos cortes na educação!'.">
+          <figcaption class="direita">Reprodução de um cartaz das manifestações contra o bloqueio de verbas da educação.
+            Porto Alegre, 15 de maio de 2019.</figcaption>
+        </figure>
+        <article id="onde-fazemos" class="secao">
+          <h1>Onde está a balbúrdia</h1>
+          <div class="texto">
+            <p>Graduar-se transcende a sala de aula, requer espaços, necessita da convivência com o novo e desconhecido.
+              A disposição física da instituição e o que constantemente entra em pauta dentro dela influenciam
+              diretamente a formação acadêmica e humana do futuro profissional que está em construção. Sendo um local
+              acolhedor, a cooperação é promovida, de forma a possibilitar a produção de conhecimentos oriundos de
+              ideias e diálogos, como, por exemplo, um congresso promovido por estudantes.</p>
+            <p>Com o congresso, possibilitamos um período de convergência de ideias, que extrapola as grades
+              curriculares, entrando em contato com o diferente. Buscamos forjar um ambiente aberto ao diálogo e
+              fomentador da discussão, sempre em espaços democráticos que respeitem a diversidade. Assim, o espaço
+              físico tem muita influência sobre a maneira como nos integramos e relacionamos, como construímos e
+              compartilhamos conhecimentos, e, por isso, é importante perceber os momentos e maneira como isso se dá.
+            </p>
+          </div>
+        </article>
+        <figure class="cartaz"><img src="img/cartaz-5.6656fa86.svg"
+            alt="Cartaz com os dizeres: 'Educação acima de tudo. Universidade Pública para todos!'.">
+          <figcaption class="esquerda">Reprodução de um cartaz das manifestações contra o bloqueio de verbas da
+            educação. Rio de Janeiro, 15 de maio de 2019.</figcaption>
+        </figure>
+        <article id="mapa-do-google">
+          <p>De 29 de outubro a 2 de novembro de 2019, no campus Dom Bosco da Universidade Federal de São João
+            del-Rei.<span class="endereco">Praça Dom Helvécio, 74, Dom Bosco<br>São João del-Rei, Minas Gerais</span>
+          </p><iframe id="googleMaps" frameborder="0"
+            src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJJ2c9w37IoQARE2-oiMYJoi0&amp;key=AIzaSyBkm34tL0xyZnwxK_LMv3xc82Paqz7LYjA"
+            allowfullscreen="allowfullscreen" style="border: 0px;" title="Mapa do local do evento pelo Google Maps."></iframe>
+        </article>
+        <figure class="cartaz"><img src="img/cartaz-8.5b745d0a.svg"
+            alt="Cartaz com os dizeres: 'Trancar não é tratar'.">
+          <figcaption class="esquerda">Reprodução de um cartaz do ato pelo Dia da Luta Antimanicomial. Rio de Janeiro,
+            17 de maio de 2019.</figcaption>
+        </figure>
+        <article id="o-que-tera" class="secao programacao">
+          <h1>Mesas redondas</h1>
+          <ul>
+            <li>Ação e Participação Política dos Conselhos de Psicologia</li>
+            <li>Defender o SUS é defender a democracia</li>
+            <li>Gênero, sexualidade e a resistência nas suas relações</li>
+            <li>Psicologia e democracia: construção na resistência</li>
+            <li>Psicologia Social do Racismo</li>
+          </ul>
+          <h1>Rodas de conversa</h1>
+          <ul>
+            <li>Mulheres pesquisadoras na Psicologia: norma de gênero e ocupação de espaços acadêmicos</li>
+            <li>Padrões de beleza, raça e classe: a identidade negra como opressão e resistência</li>
+            <li>Saúde mental do estudante</li>
+            <li>Violência de gênero e luta feminista: o que os homens têm a ver com isso?</li>
+          </ul>
+          <h1>Minicursos</h1>
+          <ul>
+            <li>Avaliação Psicológica de Criança</li>
+            <li>Clínica ampliada: uma perspectiva por meio do Acompanhamento Terapêutico</li>
+            <li>Como lidamos com nossas perdas: a Teoria do Apego como base para os lutos cotidianos</li>
+            <li>Emoção de Lidar: O uso da Arte na Clínica e a Clínica como Arte</li>
+            <li>Exclusão-Inclusão de pessoas com diferença funcional (deficiência): dimensões de análise e experiências
+              práticas na educação e no trabalho</li>
+            <li>Habilidades sociais de crianças com autismo e suas relações com habilidades educativas parentais</li>
+            <li>Mineração e violência – questões para a Psicologia Social e Comunitária</li>
+            <li>Psicanálise e Saúde Mental</li>
+            <li>Psicodrama</li>
+            <li>Psicologia e desconstrução da branquitude</li>
+            <li>Psicologia e Políticas Públicas de Assistência Social</li>
+            <li>Psicologia e povos indígenas: possibilidades e desafios</li>
+            <li>Saúde mental do trabalhador</li>
+            <li>Transgressão, crime e violência: questões para uma perspectiva crítica em Psicologia</li>
+          </ul>
+          <h1>Oficinas</h1>
+          <ul>
+            <li>A linguagem dos quadrinhos</li>
+            <li>Bordado: entre linhas e tramas</li>
+            <li>Braille</li>
+            <li>Cerâmica</li>
+            <li>Circo em movimento</li>
+            <li>Composição em livre associação de versos</li>
+            <li>Contação de histórias</li>
+            <li>Costura: "Feito à mão"</li>
+            <li>Dança</li>
+            <li>Da resistência à desobediência</li>
+            <li>Desenho</li>
+            <li>Drogas e Redução de Danos: oficina de sensibilização</li>
+            <li>Emprazere-se</li>
+            <li>Fotografia: olhar o não visto</li>
+            <li>Libras</li>
+            <li>Musicoterapia: visão interdisciplinar</li>
+            <li>Oficina de Rap e de Poesia</li>
+            <li>Pacientes ou Personagens?: descobrindo histórias, construindo enredos</li>
+            <li>Sofrimento psicossocial e cinema: a educação estética como um caminho possível para a resistência e o
+              enfrentamento</li>
+            <li>Terapias Cognitivo-Comportamentais de Terceira Onda</li>
+            <li>Zines</li>
+          </ul><a href="programacao" class="completa">Programação completa e comunicações orais</a>
+        </article>
+      </main>
+    </div>
+    <footer>
+      <section id="sobre">
+        <ul class="social">
+          <li>
+            <a href="https://facebook.com/convep.ufsj" target="_blank" rel="noopener">
+              <img src="img/facebook.bc2441e5.svg" class="facebook" alt="Logo do Facebook.">
+            </a>
+          </li>
+          <li><a href="https://instagram.com/convep2019" target="_blank" rel="noopener"><img src="img/instagram.6311dc1f.svg"
+                class="instagram" alt="Logo do Instagram."></a></li>
+        </ul>
+        <p>Qualquer questão, sugestão e/ou informação, entre em contato por nossa página do Facebook ou pelo <a
+            href="mailto:convep@ufsj.edu.br">convep@ufsj.edu.br</a>.</p>
+      </section>
+      <section id="sobre-em-detalhes"> Comissão Organizadora <ul>
+          <li>Álvaro Péres Silva</li>
+          <li>Ana Clara dos Santos Bruce</li>
+          <li>Bruna Rotterdam Fernandes</li>
+          <li>Celso Francisco Tondin</li>
+          <li>Deborah Rosária Barbosa</li>
+          <li>Fernanda de Cássia Oscar Otaciano</li>
+          <li>Gabriela Villela Arantes Santos</li>
+          <li>Greiciele Andrade Carvalho dos Santos</li>
+          <li>Heitor Soares Sanglard</li>
+          <li>Izabela Almeida Silva Pereira</li>
+          <li>João Vitor Pereira</li>
+          <li>Kellen Oliveira Garcia</li>
+          <li>Laura Santana Marques</li>
+          <li>Luana Kaori Saito</li>
+          <li>Lucas Ferreira Rongetta</li>
+          <li>Luciane Barbosa Ribeiro</li>
+          <li>Luciene Lopes Aragão</li>
+          <li>Luísa Marcondes Santos Monteiro</li>
+          <li>Maria Eduarda Benedito Diláscio</li>
+          <li>Maria Fernanda de Sousa e Silva</li>
+          <li>Millena Beatriz Rodrigues Félix</li>
+          <li>Mônia Aparecida da Silva</li>
+          <li>Naruna Mirella Nascimento</li>
+          <li>Pedro Henrique Gomes Lopes</li>
+          <li>Pedro Henrique Silva Batalhione</li>
+          <li>Rafael Ferreira Costa</li>
+          <li>Stéfany Lourenço de Sousa</li>
+          <li>Tatiana Lionço</li>
+          <li>Vanessa Peixoto Menezes de Souza</li>
+        </ul> Comissão Científica <ul>
+          <li>Prof. Dr. Celso Francisco Tondin (coordenador)</li>
+          <li>Profª. Drª. Mônia Aparecida da Silva (coordenadora)</li>
+          <li>Profª. Drª. Adriana Guimarães Rodrigues (UFSJ)</li>
+          <li>Profª. Drª. Cláudia Márcia Miranda de Paiva (UFSJ)</li>
+          <li>Profª. Drª. Cristiane Valéria Silva (UNIPTAN)</li>
+          <li>Prof. Dr. Dener Luiz da Silva (UFSJ)</li>
+          <li>Profª. Drª. Deborah Rosária Barbosa (UFMG)</li>
+          <li>Prof. Dr. Douglas Nunes Abreu (UFSJ)</li>
+          <li>Profª. Drª. Isabela Saraiva de Queiroz (UFSJ)</li>
+          <li>Profª. Drª. Jane Teresinha Domingues Cotrin</li>
+          <li>Prof. Dr. José Rodrigues de Alvarenga Filho (UFSJ)</li>
+          <li>Profª. Drª. Larissa Medeiros Marinho dos Santos (UFSJ)</li>
+          <li>Prof. Dr. Marcelo Dalla Vecchia (UFSJ)</li>
+          <li>Prof. Dr. Marco Antônio Silva Alvarenga (UFSJ)</li>
+          <li>Profª. Drª. Maria Gláucia Pires Calzavara (UFSJ)</li>
+          <li>Profª. Drª. Maria Nivalda de Carvalho Freitas (UFSJ)</li>
+          <li>Prof. Dr. Mário César Rezende Andrade (UFSJ)</li>
+          <li>Prof. Me. Ricardo Dias de Castro (UFSJ)</li>
+          <li>Prof. Me. Rodolfo Leite Batista (UNIPTAN)</li>
+          <li>Prof. Me. Rodrigo Afonso Nogueira Santos (UFSJ)</li>
+          <li>Profª. Drª. Rosângela Maria de Almeida Camarano Leal (UFSJ)</li>
+          <li>Prof. Meª. Talyta Resende de Oliveira (UNIPTAN)</li>
+          <li>Profª. Drª. Tatiana Cury Pollo (UFSJ)</li>
+          <li>Profª. Drª. Tatiana Lionço (UnB)</li>
+          <li>Prof. Dr. Wilson Camilo Chaves (UFSJ)</li>
+        </ul> Agradecimentos <ul class="texto">
+          <li>À Universidade Federal de Minas Gerais (UFMG) e Universidade Federal de Brasília (UnB) pela parceria na
+            promoção deste evento.</li>
+          <li>Ao Departamento de Psicologia (DPSIC) pelo apoio à realização deste evento, e à Ludmila Garonce,
+            secretária do Departamento, por nos ajudar imensamente em partes fundamentais da organização.</li>
+          <li>À Pró-Reitoria de Pesquisa e Pró-Graduação da Universidade Federal de São João del-Rei (UFSJ) por aprovar
+            nosso projeto no Edital de Eventos.</li>
+          <li>Aos professores do Departamento de Psicologia da UFSJ e de outras instituições por participarem da
+            Comissão Científica.</li>
+          <li>Ao Conselho Regional de Psicologia de Minas Gerais e Sindicato das Psicólogas e dos Psicólogos do Estado
+            de Minas Gerais por apoiarem a realização deste evento.</li>
+          <li>Aos estudantes da UFSJ que nos ajudaram a idealizar o Congresso e por participarem ativamente na sua
+            organização.</li>
+        </ul>
+      </section>
+      <ol id="apoio">
+        <li><a href="https://facebook.com/capsiufsj" target="_blank" rel="noopener noreferrer"><img
+              src="img/ca.c8797a87.svg" alt="Centro Acadêmico de Psicologia &quot;Ana Regina Felipe Ziller&quot;"></a>
+        </li>
+        <li><a href="http://ufsj.edu.br/" target="_blank" rel="noopener noreferrer"><img src="img/ufsj.3d2e8b3f.svg"
+              alt="Universidade Federal de São João del-Rei (UFSJ)"></a></li>
+        <li><a href="http://ufmg.br/" target="_blank" rel="noopener noreferrer"><img src="img/ufmg.80521a26.svg"
+              alt="Universidade Federal de Minas Gerais (UFMG)"></a></li>
+        <li><a href="https://www.unb.br/" target="_blank" rel="noopener noreferrer"><img src="img/unb.c4320f7d.svg"
+              alt="Universidade de Brasília (UnB)"></a></li>
+        <li><a href="http://crp04.org.br" target="_blank" rel="noopener noreferrer"><img src="img/crp04.47f76d34.svg"
+              alt="Conselho Regional de Psicologia de Minas Gerais (CRP-04)"></a></li>
+        <li><a href="http://www.psindmg.org.br" target="_blank" rel="noopener noreferrer"><img
+              src="img/psind.d02c72ed.png"
+              alt="Sindicato das Psicólogas e dos Psicólogos do Estado de Minas Gerais (PSINDMG)"></a></li>
+      </ol>
+      <section id="feito"> Feito com <img src="img/coracao.4aa66ac7.svg" alt="amor"> em São João del-Rei, Minas Gerais,
+        Brasil. </section>
+    </footer>
+  </div>
+</body>
+
+</html>
