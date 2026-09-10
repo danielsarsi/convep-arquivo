@@ -153,6 +153,12 @@ main {
   align-items: center;
 }
 
+.edicao a.btn-participante {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
 .edicao a img {
   height: 24px;
   width: 24px;
@@ -162,6 +168,14 @@ main {
 .edicao a:link,
 .edicao a:visited {
   color: inherit;
+}
+
+.edicao#setima {
+  --cor-de-fundo: #0b233a;
+}
+
+.edicao#sexta {
+  --cor-de-fundo: #b95d22;
 }
 
 .edicao#quinta {
@@ -187,12 +201,21 @@ main {
 
 footer {
   margin-top: var(--desktop-margem-cima-constante);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo-fapemig {
+  max-height: 90px;
+  margin-top: 1.5rem;
+  margin-right: 1rem;
+  padding-left: 1rem;
 }
 
 footer .linha-3 {
   height: var(--linha-tamanho);
   width: 8rem;
-  justify-self: center;
   background: linear-gradient(-90deg, rgba(255, 255, 255, 0) 0%, white 50%);
 }
 
@@ -375,14 +398,21 @@ footer .linha-3 {
 
   footer {
     margin-top: 0;
-    margin-left: calc(
-      (var(--mobile-margem-esquerda) / 2) - (var(--linha-tamanho) / 2)
-    );
+    margin-left: 0;
+    display: block;
   }
 
   footer .linha-3 {
     width: var(--linha-tamanho);
     height: 8rem;
     background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, white 50%);
+    margin-left: calc(
+      (var(--mobile-margem-esquerda) / 2) - (var(--linha-tamanho) / 2)
+    );
+  }
+
+  .logo-fapemig {
+    display: block;
+    margin: -6.5rem auto 0 auto;
   }
 }
